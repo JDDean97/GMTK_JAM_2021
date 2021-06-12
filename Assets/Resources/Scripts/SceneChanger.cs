@@ -11,4 +11,9 @@ public class SceneChanger: MonoBehaviour
         GameObject.Instantiate(loader);
         SceneManager.LoadSceneAsync(sceneNumber);
     }
+
+    public void quit()
+    {
+        Application.Quit();
+    }
 }
