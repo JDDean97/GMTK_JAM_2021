@@ -4,22 +4,29 @@ using UnityEngine;
 
 public static class keybinds
 {
-    public static Dictionary<string, KeyCode> kb = new Dictionary<string, KeyCode>()
+    public static Dictionary<string, KeyCode> kb1 = new Dictionary<string, KeyCode>()
     {
-        {"1left",KeyCode.A},
-        {"1right", KeyCode.D},
-        {"1up", KeyCode.W},
-        {"1down", KeyCode.S},
+        {"left",KeyCode.A},
+        {"right", KeyCode.D},
+        {"up", KeyCode.W},
+        {"down", KeyCode.S},
+    };
 
-        {"2left",KeyCode.J},
-        {"2right", KeyCode.L},
-        {"2up", KeyCode.I},
-        {"2down", KeyCode.K}
+    public static Dictionary<string, KeyCode> kb2 = new Dictionary<string, KeyCode>()
+    {
+        {"left",KeyCode.J},
+        {"right", KeyCode.L},
+        {"up", KeyCode.I},
+        {"down", KeyCode.K}
     };
 
     public static void save()
     {
-        foreach (KeyValuePair<string, KeyCode> pair in kb)
+        foreach (KeyValuePair<string, KeyCode> pair in kb1)
+        {
+            PlayerPrefs.SetString(pair.Key, pair.Value.ToString());
+        }
+        foreach (KeyValuePair<string, KeyCode> pair in kb2)
         {
             PlayerPrefs.SetString(pair.Key, pair.Value.ToString());
         }
@@ -28,7 +35,7 @@ public static class keybinds
     public static void load()
     {
         Dictionary<string, KeyCode> newKB = new Dictionary<string, KeyCode>();
-        foreach (KeyValuePair<string, KeyCode> pair in kb)
+        foreach (KeyValuePair<string, KeyCode> pair in kb1)
         {
             if (PlayerPrefs.HasKey(pair.Key))
             {
@@ -46,6 +53,27 @@ public static class keybinds
                 newKB.Add(pair.Key, pair.Value);
             }
         }
-        kb = newKB;
+        kb1 = newKB;
+
+        newKB = new Dictionary<string, KeyCode>();
+        foreach (KeyValuePair<string, KeyCode> pair in kb2)
+        {
+            if (PlayerPrefs.HasKey(pair.Key))
+            {
+                string keyname = PlayerPrefs.GetString(pair.Key, pair.Value.ToString());
+                foreach (KeyCode k in System.Enum.GetValues(typeof(KeyCode)))
+                {
+                    if (k.ToString() == keyname)
+                    {
+                        newKB.Add(pair.Key, k);
+                    }
+                }
+            }
+            else
+            {
+                newKB.Add(pair.Key, pair.Value);
+            }
+        }
+        kb2 = newKB;
     }
 }

@@ -2,47 +2,68 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player1Control : MonoBehaviour {
+public class PlayerControl : MonoBehaviour {
+	public int playerNum = 1;
+	Rigidbody2D rb;
 	private Movement playerMovement;
 	private float?[] movementDirection = new float?[2];
-  private GameObject player;
-  private Transform playerTransform;
-  private float power = 0.0f;
+    private GameObject player;
+    private Transform playerTransform;
+    private float power = 0.0f;
 	public int arrowCount = 0;
 	private bool canFire = true;
 	public int speed;
 	private int runSpeed;
 	public bool canMove;
+	public bool climbing;
+	Dictionary<string, KeyCode> keys;
 
 	// Use this for initialization
 	void Start () {
+		rb = GetComponent<Rigidbody2D>();
 		playerMovement = GetComponent<Movement>();
 		canMove = true;
 		speed = 5;
+		if(playerNum == 1)
+        {
+			keys = keybinds.kb1;
+        }
+		else if(playerNum == 2)
+        {
+			keys = keybinds.kb2;
+		}
 	}
 
 	// Update is called once per frame
 	void Update () {
+		Debug.Log("Climb:" + climbing);
 		movementDirection[1] = 0f;
 		movementDirection[0] = 0f;
 		if (canMove)
 		{
-			if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
+			if (Input.GetKey(keys["up"]) && !Input.GetKey(keys["down"]))
 			{
-				if (isGrounded())
+				if (!climbing)
 				{
+					if (isGrounded())
+					{
+						movementDirection[1] = 1f;
+					}
+				}
+                else
+                {
 					movementDirection[1] = 1f;
 				}
 			}
-			else if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))
+			else if (Input.GetKey(keys["down"]) && !Input.GetKey(keys["up"]))
 			{
 				movementDirection[1] = -1f;
 			}
-			if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+			if (Input.GetKey(keys["right"]) && !Input.GetKey(keys["left"]))
 			{
 				movementDirection[0] = 1f;
 			}
-			else if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+			else if (Input.GetKey(keys["left"]) && !Input.GetKey(keys["right"]))
 			{
 				movementDirection[0] = -1f;
 			}
@@ -55,10 +76,10 @@ public class Player1Control : MonoBehaviour {
 		// }
 		if (Input.GetKey(KeyCode.LeftShift)) {
 			runSpeed = speed + speed/2;
-			playerMovement.Move(movementDirection, runSpeed);
+			playerMovement.Move(movementDirection, runSpeed,climbing);
 		}
 		else {
-			playerMovement.Move(movementDirection, speed);
+			playerMovement.Move(movementDirection, speed,climbing);
 		}
 	}
 
@@ -96,7 +117,24 @@ public class Player1Control : MonoBehaviour {
 		canFire = true;
 	}
 
-	// FixedUpdate is called once per physics tick
-	void FixedUpdate () {
-	}
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+		if (Input.GetKey(keys["left"]) || Input.GetKey(keys["right"]))
+		{
+			Vector2 contactDir = collision.contacts[0].point - (Vector2)transform.position;
+			contactDir = contactDir.normalized;
+			if (Vector2.Angle(contactDir, rb.velocity) < 90)
+			{
+				climbing = true;
+			}
+			else
+			{
+				climbing = false;
+			}
+		}
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+		climbing = false;
+    }
 }
