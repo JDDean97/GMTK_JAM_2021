@@ -18,27 +18,34 @@ public class Player1Control : MonoBehaviour {
 	void Start () {
 		playerMovement = GetComponent<Movement>();
 		canMove = true;
+		speed = 5;
 	}
 
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S) && canMove) {
-			movementDirection[1] = 1f;
-		}
-		else if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W) && canMove) {
-			movementDirection[1] = -1f;
-		}
-		else {
-			movementDirection[1] = 0f;
-		}
-		if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A) && canMove) {
-			movementDirection[0] = 1f;
-		}
-		else if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && canMove) {
-			movementDirection[0] = -1f;
-		}
-		else {
-			movementDirection[0] = 0f;
+		movementDirection[1] = 0f;
+		movementDirection[0] = 0f;
+		if (canMove)
+		{
+			if (Input.GetKey(KeyCode.W) && !Input.GetKey(KeyCode.S))
+			{
+				if (isGrounded())
+				{
+					movementDirection[1] = 1f;
+				}
+			}
+			else if (Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))
+			{
+				movementDirection[1] = -1f;
+			}
+			if (Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A))
+			{
+				movementDirection[0] = 1f;
+			}
+			else if (Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+			{
+				movementDirection[0] = -1f;
+			}
 		}
 		// while (Input.GetKey(KeyCode.Space)) {
 		// 	float?[] jumpBack = new float?[1];
@@ -54,6 +61,22 @@ public class Player1Control : MonoBehaviour {
 			playerMovement.Move(movementDirection, speed);
 		}
 	}
+
+	bool isGrounded()
+    {
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up,GetComponent<Collider2D>().bounds.extents.y*1.1f);
+		Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.1f));
+		if(hit.transform!=null)
+        {
+			Debug.Log("grounded");
+			return true; //grounded
+        }
+        else
+        {
+			Debug.Log("midair");
+			return false;//midair
+        }
+    }
 
 	IEnumerator shootArrow() {
 		player = GameObject.Find("player_character");

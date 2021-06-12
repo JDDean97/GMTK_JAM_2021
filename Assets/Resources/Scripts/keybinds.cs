@@ -11,10 +11,10 @@ public static class keybinds
         {"1up", KeyCode.W},
         {"1down", KeyCode.S},
 
-        {"2left",KeyCode.LeftArrow},
-        {"2right", KeyCode.RightArrow},
-        {"2up", KeyCode.UpArrow},
-        {"2down", KeyCode.DownArrow}
+        {"2left",KeyCode.J},
+        {"2right", KeyCode.L},
+        {"2up", KeyCode.I},
+        {"2down", KeyCode.K}
     };
 
     public static void save()

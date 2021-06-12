@@ -36,6 +36,13 @@ public class Movement : MonoBehaviour {
 	public void Move(float?[] direction, int speed) {
 		Vector2 vector = new Vector2((float)direction[0], (float)direction[1]);
 		objectVelocity = speed * (vector.normalized);
+		float vert = rb.velocity.y;
+		if(direction[1]>0)
+        {
+			vert = 5;
+        }
+		
+		objectVelocity.y = vert;
 		Debug.Log(objectVelocity);
 		if (objectVelocity.x == 0f && objectVelocity.y == 0f) {
 			rb.velocity = Vector2.Scale(rb.velocity, new Vector2(.99f, .99f));
