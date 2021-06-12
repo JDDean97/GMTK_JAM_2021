@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   arrowCount: 0
-  speed: 0
+  speed: 20
   canMove: 0
 --- !u!114 &5429362902512761815
 MonoBehaviour:
