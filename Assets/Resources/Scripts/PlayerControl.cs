@@ -119,17 +119,20 @@ public class PlayerControl : MonoBehaviour {
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-		if (Input.GetKey(keys["left"]) || Input.GetKey(keys["right"]))
+		if (!collision.transform.CompareTag("Player"))
 		{
-			Vector2 contactDir = collision.contacts[0].point - (Vector2)transform.position;
-			contactDir = contactDir.normalized;
-			if (Vector2.Angle(contactDir, rb.velocity) < 90)
+			if (Input.GetKey(keys["left"]) || Input.GetKey(keys["right"]))
 			{
-				climbing = true;
-			}
-			else
-			{
-				climbing = false;
+				Vector2 contactDir = collision.contacts[0].point - (Vector2)transform.position;
+				contactDir = contactDir.normalized;
+				if (Vector2.Angle(contactDir, rb.velocity) < 90)
+				{
+					climbing = true;
+				}
+				else
+				{
+					climbing = false;
+				}
 			}
 		}
     }
