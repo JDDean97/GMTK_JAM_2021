@@ -48,6 +48,7 @@ public class PlayerControl : MonoBehaviour {
 					if (isGrounded())
 					{
 						movementDirection[1] = 1f;
+						transform.Find("Emitter").GetComponent<ParticleSystem>().Emit(4);
 					}
 				}
                 else
@@ -125,7 +126,7 @@ public class PlayerControl : MonoBehaviour {
 			{
 				Vector2 contactDir = collision.contacts[0].point - (Vector2)transform.position;
 				contactDir = contactDir.normalized;
-				if (Vector2.Angle(contactDir, rb.velocity) < 90)
+				if (Vector2.Angle(contactDir, rb.velocity) < 45)
 				{
 					climbing = true;
 				}
