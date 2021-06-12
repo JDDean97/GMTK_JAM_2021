@@ -4,8 +4,6 @@ using System.Collections.Generic;
 
 // Handles the physics of player movement
 public class Movement : MonoBehaviour {
-	public float xStart;
-	public float yStart;
 
 	private Rigidbody2D rb;
 	private Vector2 objectVelocity;
@@ -18,7 +16,6 @@ public class Movement : MonoBehaviour {
 	void Start () {
 		rb = GetComponent<Rigidbody2D>();
 		name = rb.name;
-		GetComponent<Rigidbody2D>().position = new Vector2(xStart, yStart);
 	}
 
 	// Update is called every significant frame
@@ -45,7 +42,7 @@ public class Movement : MonoBehaviour {
         {
 			vert = (float)direction[1] * speed;
         }
-		
+
 		objectVelocity.y = vert;
 		//Debug.Log(objectVelocity);
 		if (objectVelocity.x == 0f && objectVelocity.y == 0f) {

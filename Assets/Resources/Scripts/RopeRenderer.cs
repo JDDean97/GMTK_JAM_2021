@@ -14,6 +14,7 @@ public class RopeRenderer : MonoBehaviour
     private Vector3 ropePosition;
     private Vector3 localRopePosition;
     public int numberOfSegments = 30;
+    public float scaleFactor = 0.02f;
 
     // Start is called before the first frame update
     void Start()
@@ -29,12 +30,12 @@ public class RopeRenderer : MonoBehaviour
 
         currentSegment = climber1;
 
-        CreateInitalRopeSegment(currentSegment, 1);
-        for (int i = 1; i <= numberOfSegments; i++)
+        AttachInitalRopeSegment(currentSegment);
+        for (int i = 2; i <= numberOfSegments; i++)
         {
-          CreateRopeSegment(currentSegment, i);
+          AttachRopeSegment(currentSegment, i);
         }
-        // CreateFinalRopeSegment(currentSegment, numberOfSegments+1);
+        AttachFinalRopeSegment(currentSegment);
 
     }
 
@@ -44,14 +45,10 @@ public class RopeRenderer : MonoBehaviour
 
     }
 
-    void CreateInitalRopeSegment(GameObject previousSegment, int segmentNum)
+    void AttachInitalRopeSegment(GameObject previousSegment)
     {
-        GameObject ropeSegment = new GameObject("segment" + segmentNum);
-        ropeSegment.transform.localScale = new Vector3(0.02f, 0.02f, 1.0f);
-        ropeSegment.AddComponent<SpriteRenderer>();
-        ropeSegment.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rope_segment");
-        ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 3;
-        ropeSegment.AddComponent<Rigidbody2D>();
+        GameObject ropeSegment = GenerateRopeSegment(1);
+        ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 1;
 
         Vector3 extents = ropeSegment.GetComponent<SpriteRenderer>().bounds.extents;
 
@@ -59,21 +56,21 @@ public class RopeRenderer : MonoBehaviour
         adjustedRopePosition.x += extents[0];
         ropeSegment.transform.position = adjustedRopePosition;
 
+        Vector3 connectedAnchorPosition = previousSegment.transform.localPosition;
+        connectedAnchorPosition.x += (extents[0] / scaleFactor);
+
         previousSegment.AddComponent<HingeJoint2D>();
+        previousSegment.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
         previousSegment.GetComponent<HingeJoint2D>().connectedBody = ropeSegment.GetComponent<Rigidbody2D>();
         previousSegment.GetComponent<HingeJoint2D>().anchor = localRopePosition;
+        previousSegment.GetComponent<HingeJoint2D>().connectedAnchor = connectedAnchorPosition;
 
         currentSegment = ropeSegment;
     }
 
-    void CreateRopeSegment(GameObject previousSegment, int segmentNum)
+    void AttachRopeSegment(GameObject previousSegment, int segmentNum)
     {
-        GameObject ropeSegment = new GameObject("segment" + segmentNum);
-        ropeSegment.transform.localScale = new Vector3(0.02f, 0.02f, 1.0f);
-        ropeSegment.AddComponent<SpriteRenderer>();
-        ropeSegment.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rope_segment");
-        ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 1;
-        ropeSegment.AddComponent<Rigidbody2D>();
+        GameObject ropeSegment = GenerateRopeSegment(segmentNum);
 
         Vector3 extents = ropeSegment.GetComponent<SpriteRenderer>().bounds.extents;
 
@@ -81,11 +78,9 @@ public class RopeRenderer : MonoBehaviour
         adjustedRopePosition.x += (extents[0] * 2);
         ropeSegment.transform.position = adjustedRopePosition;
 
-        // The positions are local but the localPosition is scale invarient
-        Vector3 anchorPosition = previousSegment.transform.localPosition;
-        anchorPosition.x += (extents[0] * 50);
-        Vector3 connectedAnchorPosition = previousSegment.transform.localPosition;
-        connectedAnchorPosition.x -= (extents[0] * 50);
+        float unscaledExtent = extents[0] / scaleFactor;
+        Vector3 anchorPosition = new Vector3((float)(unscaledExtent - 0.5f), 0, 0);
+        Vector3 connectedAnchorPosition = new Vector3((float)(-(unscaledExtent - 0.5f)), 0, 0);
 
         previousSegment.AddComponent<HingeJoint2D>();
         previousSegment.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
@@ -94,5 +89,43 @@ public class RopeRenderer : MonoBehaviour
         previousSegment.GetComponent<HingeJoint2D>().connectedAnchor = connectedAnchorPosition;
 
         currentSegment = ropeSegment;
+    }
+
+    void AttachFinalRopeSegment(GameObject previousSegment)
+    {
+        Vector3 finalRopePosition = climber2.transform.position;
+        finalRopePosition += ropeEnd.transform.localPosition;
+        // GameObject ropeSegment = GenerateRopeSegment(1);
+        // ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 1;
+
+        Vector3 extents = previousSegment.GetComponent<SpriteRenderer>().bounds.extents;
+
+        // Vector3 adjustedRopePosition = ropePosition;
+        // adjustedRopePosition.x += extents[0];
+        // ropeSegment.transform.position = adjustedRopePosition;
+
+        // Vector3 connectedAnchorPosition = previousSegment.transform.localPosition;
+        // connectedAnchorPosition.x += (extents[0] / scaleFactor);
+        float unscaledExtent = extents[0] / scaleFactor;
+        Vector3 anchorPosition = new Vector3((float)(unscaledExtent - 0.5f), 0, 0);
+
+        previousSegment.AddComponent<HingeJoint2D>();
+        previousSegment.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
+        previousSegment.GetComponent<HingeJoint2D>().connectedBody = climber2.GetComponent<Rigidbody2D>();
+        previousSegment.GetComponent<HingeJoint2D>().anchor = anchorPosition;
+        previousSegment.GetComponent<HingeJoint2D>().connectedAnchor = finalRopePosition;
+    }
+
+    GameObject GenerateRopeSegment(int segmentNum)
+    {
+      GameObject ropeSegment = new GameObject("segment" + segmentNum);
+      ropeSegment.transform.localScale = new Vector3(scaleFactor, scaleFactor, 1.0f);
+      ropeSegment.AddComponent<SpriteRenderer>();
+      ropeSegment.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rope_segment");
+      ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 2;
+      ropeSegment.AddComponent<Rigidbody2D>();
+      ropeSegment.GetComponent<Rigidbody2D>().mass = 3;
+
+      return ropeSegment;
     }
 }
