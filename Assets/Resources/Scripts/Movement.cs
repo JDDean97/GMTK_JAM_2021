@@ -36,7 +36,7 @@ public class Movement : MonoBehaviour {
 		float vert = rb.velocity.y;
 		if(direction[1]>0 && !climb)
         {
-			vert = 5;
+			vert = 7;
         }
 		if(climb)
         {
