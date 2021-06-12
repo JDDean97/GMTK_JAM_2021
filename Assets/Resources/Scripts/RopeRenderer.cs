@@ -14,7 +14,8 @@ public class RopeRenderer : MonoBehaviour
     private Vector3 ropePosition;
     private Vector3 localRopePosition;
     public int numberOfSegments = 30;
-    public float scaleFactor = 0.02f;
+    public float scaleFactor = 0.03f;
+    public float mass = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -116,7 +117,7 @@ public class RopeRenderer : MonoBehaviour
       ropeSegment.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rope_segment");
       ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 2;
       ropeSegment.AddComponent<Rigidbody2D>();
-      ropeSegment.GetComponent<Rigidbody2D>().mass = 3;
+      ropeSegment.GetComponent<Rigidbody2D>().mass = mass;
 
       return ropeSegment;
     }
