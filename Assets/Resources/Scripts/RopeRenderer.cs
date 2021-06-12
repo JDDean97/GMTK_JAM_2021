@@ -13,7 +13,7 @@ public class RopeRenderer : MonoBehaviour
     private Vector3 ropeStartAnchor;
     private Vector3 ropePosition;
     private Vector3 localRopePosition;
-    public int numberOfSegments = 10;
+    public int numberOfSegments = 30;
 
     // Start is called before the first frame update
     void Start()
@@ -47,7 +47,7 @@ public class RopeRenderer : MonoBehaviour
     void CreateInitalRopeSegment(GameObject previousSegment, int segmentNum)
     {
         GameObject ropeSegment = new GameObject("segment" + segmentNum);
-        ropeSegment.transform.localScale = new Vector3(0.1f, 0.1f, 1.0f);
+        ropeSegment.transform.localScale = new Vector3(0.02f, 0.02f, 1.0f);
         ropeSegment.AddComponent<SpriteRenderer>();
         ropeSegment.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rope_segment");
         ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 3;
@@ -69,10 +69,10 @@ public class RopeRenderer : MonoBehaviour
     void CreateRopeSegment(GameObject previousSegment, int segmentNum)
     {
         GameObject ropeSegment = new GameObject("segment" + segmentNum);
-        ropeSegment.transform.localScale = new Vector3(0.1f, 0.1f, 1.0f);
+        ropeSegment.transform.localScale = new Vector3(0.02f, 0.02f, 1.0f);
         ropeSegment.AddComponent<SpriteRenderer>();
         ropeSegment.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/rope_segment");
-        ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 3;
+        ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 1;
         ropeSegment.AddComponent<Rigidbody2D>();
 
         Vector3 extents = ropeSegment.GetComponent<SpriteRenderer>().bounds.extents;
@@ -83,9 +83,9 @@ public class RopeRenderer : MonoBehaviour
 
         // The positions are local but the localPosition is scale invarient
         Vector3 anchorPosition = previousSegment.transform.localPosition;
-        anchorPosition.x += (extents[0] * 10);
+        anchorPosition.x += (extents[0] * 50);
         Vector3 connectedAnchorPosition = previousSegment.transform.localPosition;
-        connectedAnchorPosition.x -= (extents[0] * 10);
+        connectedAnchorPosition.x -= (extents[0] * 50);
 
         previousSegment.AddComponent<HingeJoint2D>();
         previousSegment.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
