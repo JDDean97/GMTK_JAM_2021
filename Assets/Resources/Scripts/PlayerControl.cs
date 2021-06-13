@@ -105,8 +105,8 @@ public class PlayerControl : MonoBehaviour {
 
     public bool isGrounded()
     {
-		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up,GetComponent<Collider2D>().bounds.extents.y*1.4f);
-		Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.1f));
+		RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3.left *0.4f), -Vector2.up,GetComponent<Collider2D>().bounds.extents.y*1.4f);
+		Debug.DrawRay(transform.position + (Vector3.left * 0.4f), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f));
 		if(hit.transform!=null)
         {
 			//Debug.Log("grounded");
@@ -176,4 +176,18 @@ public class PlayerControl : MonoBehaviour {
     {
 		climbing = false;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+		if (collision.CompareTag("Coin"))
+        {
+			FindObjectOfType<Director>().coinCollect(collision.transform.position);
+			Destroy(collision.gameObject);
+		}
+		else if(collision.CompareTag("Flag"))
+        {
+			FindObjectOfType<Director>().flagCollect(collision.transform.position);
+			Destroy(collision.gameObject);
+		}
+	}
 }

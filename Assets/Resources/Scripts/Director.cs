@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Director : MonoBehaviour
 {
+    float coins = 0;
     public float ropeLength = 20;
     float ropeSlide = 2;
     int flags;
@@ -53,8 +54,15 @@ public class Director : MonoBehaviour
         ropeLength = Mathf.Clamp(ropeLength, 0, 25);
     }
 
-    public void flagCollect()
+    public void coinCollect(Vector3 spot)
     {
+        coins += 1;
+        Instantiate(Resources.Load<GameObject>("Prefabs/Sprinkle"),spot,Quaternion.identity);
+    }
+
+    public void flagCollect(Vector3 spot)
+    {
+        Instantiate(Resources.Load<GameObject>("Prefabs/flagSprinkle"), spot, Quaternion.identity);
         flags -= 1;
         if(flags<=0)
         {
