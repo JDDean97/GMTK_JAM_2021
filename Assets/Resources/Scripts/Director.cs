@@ -21,7 +21,7 @@ public class Director : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("length: " + ropeLength);
+        //Debug.Log("length: " + ropeLength);
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             if(pauseMenu.activeInHierarchy)
@@ -51,18 +51,20 @@ public class Director : MonoBehaviour
     public void shortenRope()
     {
         ropeLength += ropeSlide * Time.deltaTime;
-        ropeLength = Mathf.Clamp(ropeLength, 0, 25);
+        ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
     }
 
     public void coinCollect(Vector3 spot)
     {
         coins += 1;
         Instantiate(Resources.Load<GameObject>("Prefabs/Sprinkle"),spot,Quaternion.identity);
+        Instantiate(Resources.Load<GameObject>("Prefabs/coinSound"), spot, Quaternion.identity);
     }
 
     public void flagCollect(Vector3 spot)
     {
         Instantiate(Resources.Load<GameObject>("Prefabs/flagSprinkle"), spot, Quaternion.identity);
+        Instantiate(Resources.Load<GameObject>("Prefabs/flagSound"), spot, Quaternion.identity);
         flags -= 1;
         if(flags<=0)
         {
