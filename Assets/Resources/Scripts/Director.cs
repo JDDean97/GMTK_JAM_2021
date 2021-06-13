@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class Director : MonoBehaviour
 {
+    float coins = 0;
     public float ropeLength = 20;
     float ropeSlide = 2;
     int flags;
     GameObject pauseMenu;
+    float ropeMin = 0.1f;
+    float ropeMax = 25;
+    float transitionSpeed = 3;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,7 +24,7 @@ public class Director : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("length: " + ropeLength);
+        //Debug.Log("length: " + ropeLength);
         if(Input.GetKeyDown(KeyCode.Escape))
         {
             if(pauseMenu.activeInHierarchy)
@@ -32,6 +36,24 @@ public class Director : MonoBehaviour
                 pause();
             }
             
+        }
+
+        if(ropeLength>ropeMax)
+        {
+            Mathf.Lerp(ropeLength, ropeMax, transitionSpeed * Time.deltaTime);
+        }
+        else if(ropeLength < ropeMin)
+        {
+            Mathf.Lerp(ropeLength, ropeMin, transitionSpeed * Time.deltaTime);
+        }
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        
+        if (Vector2.Distance(players[0].transform.position, players[1].transform.position)>ropeLength)
+        {
+            if (players[0].GetComponent<PlayerControl>().isGrounded() && players[1].GetComponent<PlayerControl>().isGrounded())
+            {
+                ropeLength = Vector2.Distance(players[0].transform.position, players[1].transform.position) + 1;
+            }
         }
     }
 
@@ -50,11 +72,20 @@ public class Director : MonoBehaviour
     public void shortenRope()
     {
         ropeLength += ropeSlide * Time.deltaTime;
-        ropeLength = Mathf.Clamp(ropeLength, 0, 25);
+        //ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
     }
 
-    public void flagCollect()
+    public void coinCollect(Vector3 spot)
     {
+        coins += 1;
+        Instantiate(Resources.Load<GameObject>("Prefabs/Sprinkle"),spot,Quaternion.identity);
+        Instantiate(Resources.Load<GameObject>("Prefabs/coinSound"), spot, Quaternion.identity);
+    }
+
+    public void flagCollect(Vector3 spot)
+    {
+        Instantiate(Resources.Load<GameObject>("Prefabs/flagSprinkle"), spot, Quaternion.identity);
+        Instantiate(Resources.Load<GameObject>("Prefabs/flagSound"), spot, Quaternion.identity);
         flags -= 1;
         if(flags<=0)
         {
@@ -64,12 +95,13 @@ public class Director : MonoBehaviour
 
     void victory()
     {
+        FindObjectOfType<Canvas>().transform.Find("Victory").gameObject.SetActive(true);
         Time.timeScale = 0;
     }
 
     public void lengthenRope()
     {
         ropeLength -= ropeSlide * Time.deltaTime;
-        ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
+        //ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
     }
 }

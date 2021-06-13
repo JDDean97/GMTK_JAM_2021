@@ -22,7 +22,6 @@ public class cameraSmoother : MonoBehaviour
         //find characters screen position and zoom out until they're both on screen
         Vector2 p1pos = Camera.main.WorldToViewportPoint((Vector2)climbers[0].transform.position + climbers[0].GetComponent<Rigidbody2D>().velocity);
         Vector2 p2pos = Camera.main.WorldToViewportPoint((Vector2)climbers[1].transform.position + climbers[1].GetComponent<Rigidbody2D>().velocity);
-        Debug.Log("p1: " + p1pos + "  p2: " + p2pos);
         if(p1pos.x >1 || p1pos.x<0)
         {
             Camera.main.orthographicSize += zoomSpeed * Time.deltaTime;

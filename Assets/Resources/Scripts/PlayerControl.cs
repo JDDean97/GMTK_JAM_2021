@@ -58,7 +58,8 @@ public class PlayerControl : MonoBehaviour {
 				}
                 else
                 {
-					movementDirection[1] = 1f;
+                    movementDirection[1] = 1f;
+                    //rb.AddForce(Vector2.up * 3);
 				}
 			}
 			else if (Input.GetKey(keys["down"]) && !Input.GetKey(keys["up"]))
@@ -100,22 +101,34 @@ public class PlayerControl : MonoBehaviour {
 		{
 			playerMovement.Move(movementDirection, speed, climbing);
 		}
-		swing();
 	}
 
     public bool isGrounded()
-    {
-		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up,GetComponent<Collider2D>().bounds.extents.y*1.4f);
-		Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.1f));
-		if(hit.transform!=null)
+    {	
+		int hits = 0;
+		for(int iter = 0;iter<3;iter++)
         {
-			//Debug.Log("grounded");
-			return true; //grounded
+			RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3.left * 0.8f) + (Vector3.right * 0.4f * iter), -Vector2.up, GetComponent<Collider2D>().bounds.extents.y * 1.4f);
+			if (hit.transform != null)
+			{
+				Debug.DrawRay(transform.position + (Vector3.left * 0.8f) + (Vector3.right * 0.4f * iter), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f),Color.red);
+				hits++;
+			}
+			else
+			{
+				Debug.DrawRay(transform.position + (Vector3.left * 0.8f) + (Vector3.right * 0.4f * iter), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f), Color.blue);
+			}
+		}		
+		Debug.DrawRay(transform.position + (Vector3.left * 0.4f), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f));
+		if(hits>=2)
+        {
+            //Debug.Log("grounded");
+            return true; //grounded
         }
         else
         {
-			//Debug.Log("midair");
-			return false;//midair
+            //Debug.Log("midair");
+            return false;//midair
         }
     }
 
@@ -131,7 +144,9 @@ public class PlayerControl : MonoBehaviour {
 		else
 		{
 			Debug.DrawRay(transform.position, rb.velocity, Color.red);
-			return Vector3.zero;
+			Vector3 vel = rb.velocity;
+			return vel;
+			//return Vector3.zero;
 		}
 	}
 
@@ -155,18 +170,32 @@ public class PlayerControl : MonoBehaviour {
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+		Vector2 realPos = (Vector2)transform.position + GetComponent<Collider2D>().offset;
 		if (!collision.transform.CompareTag("Player"))
 		{
 			if (Input.GetKey(keys["left"]) || Input.GetKey(keys["right"]))
 			{
-				Vector2 contactDir = collision.contacts[0].point - (Vector2)transform.position;
+				Vector2 contactDir = collision.GetContact(0).point - realPos;
 				contactDir = contactDir.normalized;
-				if (Vector2.Angle(contactDir, rb.velocity) < 45)
+				Vector2 dir = rb.velocity;
+				if(Input.GetKey(keys["left"]))
+                {
+					dir = Vector2.left;
+                }
+				else if(Input.GetKey(keys["right"]))
+                {
+					dir = Vector2.right;
+                }
+				Debug.DrawRay(transform.position, contactDir * 10, Color.cyan);
+				float angle = Mathf.Abs(Vector2.SignedAngle(contactDir, dir));
+				if (angle < 95)
 				{
+					Debug.Log("player" + playerNum + "  climbing");
 					climbing = true;
 				}
 				else
 				{
+					Debug.Log("player" + playerNum + "  not climbing");
 					climbing = false;
 				}
 			}
@@ -176,4 +205,18 @@ public class PlayerControl : MonoBehaviour {
     {
 		climbing = false;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+		if (collision.CompareTag("Coin"))
+        {
+			FindObjectOfType<Director>().coinCollect(collision.transform.position);
+			Destroy(collision.gameObject);
+		}
+		else if(collision.CompareTag("Flag"))
+        {
+			FindObjectOfType<Director>().flagCollect(collision.transform.position);
+			Destroy(collision.gameObject);
+		}
+	}
 }
