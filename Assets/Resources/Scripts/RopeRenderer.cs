@@ -121,7 +121,6 @@ public class RopeRenderer : MonoBehaviour
     {
         GameObject ropeSegment = GenerateRopeSegment(1);
         ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 1;
-        previousSegment.GetComponent<Rigidbody2D>().mass = 0;
 
         Vector3 extents = ropeSegment.GetComponent<SpriteRenderer>().bounds.extents;
 
@@ -129,14 +128,14 @@ public class RopeRenderer : MonoBehaviour
         adjustedRopePosition.x += extents[0];
         ropeSegment.transform.position = adjustedRopePosition;
 
-        Vector3 connectedAnchorPosition = previousSegment.transform.localPosition;
-        connectedAnchorPosition.x += (extents[0] / scaleFactor);
-
-        previousSegment.AddComponent<HingeJoint2D>();
-        previousSegment.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
-        previousSegment.GetComponent<HingeJoint2D>().connectedBody = ropeSegment.GetComponent<Rigidbody2D>();
-        previousSegment.GetComponent<HingeJoint2D>().anchor = localRopePosition;
-        previousSegment.GetComponent<HingeJoint2D>().connectedAnchor = localRopePosition;
+        // Vector3 connectedAnchorPosition = previousSegment.transform.localPosition;
+        // connectedAnchorPosition.x += (extents[0] / scaleFactor);
+        //
+        // previousSegment.AddComponent<HingeJoint2D>();
+        // previousSegment.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
+        // previousSegment.GetComponent<HingeJoint2D>().connectedBody = ropeSegment.GetComponent<Rigidbody2D>();
+        // previousSegment.GetComponent<HingeJoint2D>().anchor = localRopePosition;
+        // previousSegment.GetComponent<HingeJoint2D>().connectedAnchor = localRopePosition;
 
         currentSegment = ropeSegment;
     }
@@ -175,11 +174,11 @@ public class RopeRenderer : MonoBehaviour
         float unscaledExtent = extents[0] / scaleFactor;
         Vector3 anchorPosition = new Vector3((float)(unscaledExtent - 0.5f), 0, 0);
 
-        previousSegment.AddComponent<HingeJoint2D>();
-        previousSegment.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
-        previousSegment.GetComponent<HingeJoint2D>().connectedBody = climber2.GetComponent<Rigidbody2D>();
-        previousSegment.GetComponent<HingeJoint2D>().anchor = anchorPosition;
-        previousSegment.GetComponent<HingeJoint2D>().connectedAnchor = finalRopePosition;
+        // previousSegment.AddComponent<HingeJoint2D>();
+        // previousSegment.GetComponent<HingeJoint2D>().autoConfigureConnectedAnchor = false;
+        // previousSegment.GetComponent<HingeJoint2D>().connectedBody = climber2.GetComponent<Rigidbody2D>();
+        // previousSegment.GetComponent<HingeJoint2D>().anchor = anchorPosition;
+        // previousSegment.GetComponent<HingeJoint2D>().connectedAnchor = finalRopePosition;
     }
 
     GameObject GenerateRopeSegment(int segmentNum)
@@ -193,10 +192,10 @@ public class RopeRenderer : MonoBehaviour
       ropeSegment.GetComponent<SpriteRenderer>().sortingOrder = 2;
 
       ropeSegment.AddComponent<Rigidbody2D>();
-      ropeSegment.GetComponent<Rigidbody2D>().mass = 1f;
+      ropeSegment.GetComponent<Rigidbody2D>().mass = mass;
 
-      ropeSegment.AddComponent<CapsuleCollider2D>();
-      ropeSegment.GetComponent<CapsuleCollider2D>().direction = CapsuleDirection2D.Horizontal;
+      // ropeSegment.AddComponent<CapsuleCollider2D>();
+      // ropeSegment.GetComponent<CapsuleCollider2D>().direction = CapsuleDirection2D.Horizontal;
 
       return ropeSegment;
     }
