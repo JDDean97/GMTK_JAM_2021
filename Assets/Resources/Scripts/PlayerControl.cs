@@ -53,7 +53,7 @@ public class PlayerControl : MonoBehaviour {
 					if (isGrounded())
 					{
 						movementDirection[1] = 1f;
-						transform.Find("Emitter").GetComponent<ParticleSystem>().Emit(4);
+						// transform.Find("Emitter").GetComponent<ParticleSystem>().Emit(4);
 					}
 				}
                 else
@@ -86,8 +86,8 @@ public class PlayerControl : MonoBehaviour {
 				movementDirection[0] = -1f;
 			}
 		}
-		
-		
+
+
 	}
 
     private void FixedUpdate()
@@ -100,13 +100,13 @@ public class PlayerControl : MonoBehaviour {
 		else
 		{
 			playerMovement.Move(movementDirection, speed, climbing);
-		}		
+		}
 		swing();
 	}
 
     public bool isGrounded()
     {
-		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up,GetComponent<Collider2D>().bounds.extents.y*1.1f);
+		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up,GetComponent<Collider2D>().bounds.extents.y*1.4f);
 		Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.1f));
 		if(hit.transform!=null)
         {
