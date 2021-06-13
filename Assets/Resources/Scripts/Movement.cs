@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // Handles the physics of player movement
 public class Movement : MonoBehaviour {
 
-	private Rigidbody2D rb;
+	Rigidbody2D rb;
 	private Vector2 objectVelocity;
 
 	private double xPrevious;
@@ -42,20 +42,23 @@ public class Movement : MonoBehaviour {
         {
 			vert = (float)direction[1] * speed;
         }
-
+		
 		objectVelocity.y = vert;
-		//Debug.Log(objectVelocity);
-		if (objectVelocity.x == 0f && objectVelocity.y == 0f) {
-			rb.velocity = Vector2.Scale(rb.velocity, new Vector2(.99f, .99f));
+		//Debug.Log(objectVelocity);		
+		Vector2 constrainedVelocity = rb.GetComponent<PlayerControl>().swing();
+		if(constrainedVelocity!=Vector2.zero)
+        {
+			rb.velocity = constrainedVelocity;
 		}
-		else {
+        else
+        {
 			rb.velocity = objectVelocity;
 		}
 	}
 
 	// Will immidiatly stop the players movement
 	// Generally don't like this as a way to stop the player
-	public void Stop () {
+	public void Stop() {
 		rb.velocity = new Vector2(0, 0);
 	}
 }

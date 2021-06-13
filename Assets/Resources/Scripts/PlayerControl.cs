@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class PlayerControl : MonoBehaviour {
+	public Transform buddy;
+    Vector3 tether;
+	float length = 20;
 	public int playerNum = 1;
 	Rigidbody2D rb;
 	private Movement playerMovement;
@@ -36,7 +39,9 @@ public class PlayerControl : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		Debug.Log("Climb:" + climbing);
+		//Debug.Log("Climb:" + climbing);
+		length = FindObjectOfType<Director>().ropeLength;
+		tether = buddy.position;
 		movementDirection[1] = 0f;
 		movementDirection[0] = 0f;
 		if (canMove)
@@ -58,7 +63,19 @@ public class PlayerControl : MonoBehaviour {
 			}
 			else if (Input.GetKey(keys["down"]) && !Input.GetKey(keys["up"]))
 			{
-				movementDirection[1] = -1f;
+				float ropeSlide = 3;
+				//movementDirection[1] = -1f;
+				if(playerNum == 1)
+                {
+					FindObjectOfType<Director>().lengthenRope();
+                }
+				else
+                {
+					FindObjectOfType<Director>().shortenRope();
+				}
+				//length = Mathf.Clamp(length, 5, 25);
+				//Debug.Log("length: " + length);
+				//movementDirection[1] = -1f;
 			}
 			if (Input.GetKey(keys["right"]) && !Input.GetKey(keys["left"]))
 			{
@@ -69,36 +86,55 @@ public class PlayerControl : MonoBehaviour {
 				movementDirection[0] = -1f;
 			}
 		}
-		// while (Input.GetKey(KeyCode.Space)) {
-		// 	float?[] jumpBack = new float?[1];
-		// 	jumpBack[0] = Mathf.PI;
-		// 	playerMovement.Move(jumpBack, 20);
-		// 	canMove = false;
-		// }
-		if (Input.GetKey(KeyCode.LeftShift)) {
-			runSpeed = speed + speed/2;
-			playerMovement.Move(movementDirection, runSpeed,climbing);
-		}
-		else {
-			playerMovement.Move(movementDirection, speed,climbing);
-		}
+		
+		
 	}
 
-	bool isGrounded()
+    private void FixedUpdate()
+    {
+		if (Input.GetKey(KeyCode.LeftShift))
+		{
+			runSpeed = speed + speed / 2;
+			playerMovement.Move(movementDirection, runSpeed, climbing);
+		}
+		else
+		{
+			playerMovement.Move(movementDirection, speed, climbing);
+		}		
+		swing();
+	}
+
+    bool isGrounded()
     {
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up,GetComponent<Collider2D>().bounds.extents.y*1.1f);
 		Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.1f));
 		if(hit.transform!=null)
         {
-			Debug.Log("grounded");
+			//Debug.Log("grounded");
 			return true; //grounded
         }
         else
         {
-			Debug.Log("midair");
+			//Debug.Log("midair");
 			return false;//midair
         }
     }
+
+	public Vector3 swing()
+    {
+		Vector3 testPos = transform.position + (Vector3)rb.velocity * Time.deltaTime;
+		if ((testPos - tether).magnitude > length)
+		{
+			testPos = (testPos - tether).normalized * length + tether;
+			Debug.DrawRay(transform.position, testPos, Color.green, 2);
+			return (testPos - transform.position) / Time.deltaTime;
+		}
+		else
+		{
+			Debug.DrawRay(transform.position, rb.velocity, Color.red);
+			return Vector3.zero;
+		}
+	}
 
 	IEnumerator shootArrow() {
 		player = GameObject.Find("player_character");
