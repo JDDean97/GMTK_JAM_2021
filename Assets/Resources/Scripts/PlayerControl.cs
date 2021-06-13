@@ -58,8 +58,8 @@ public class PlayerControl : MonoBehaviour {
 				}
                 else
                 {
-					//movementDirection[1] = 1f;
-					rb.AddForce(Vector2.up * 3);
+                    movementDirection[1] = 1f;
+                    //rb.AddForce(Vector2.up * 3);
 				}
 			}
 			else if (Input.GetKey(keys["down"]) && !Input.GetKey(keys["up"]))

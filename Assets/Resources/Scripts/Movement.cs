@@ -40,13 +40,13 @@ public class Movement : MonoBehaviour {
         }
 		if(climb)
         {
-			vert = (float)direction[1] * speed;
+			vert = (float)direction[1] * 7;
         }
 		
 		objectVelocity.y = vert;
         //Debug.Log(objectVelocity);
         Vector2 constrainedVelocity = rb.GetComponent<PlayerControl>().swing();
-		if(/*constrainedVelocity!=Vector2.zero && */!GetComponent<PlayerControl>().isGrounded())
+		if(/*constrainedVelocity!=Vector2.zero && */!GetComponent<PlayerControl>().isGrounded() &&!climb)
         {
 			rb.velocity = constrainedVelocity;
 		}

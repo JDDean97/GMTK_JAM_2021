@@ -9,6 +9,9 @@ public class Director : MonoBehaviour
     float ropeSlide = 2;
     int flags;
     GameObject pauseMenu;
+    float ropeMin = 0.1f;
+    float ropeMax = 25;
+    float transitionSpeed = 3;
     // Start is called before the first frame update
     void Start()
     {
@@ -34,6 +37,24 @@ public class Director : MonoBehaviour
             }
             
         }
+
+        if(ropeLength>ropeMax)
+        {
+            Mathf.Lerp(ropeLength, ropeMax, transitionSpeed * Time.deltaTime);
+        }
+        else if(ropeLength < ropeMin)
+        {
+            Mathf.Lerp(ropeLength, ropeMin, transitionSpeed * Time.deltaTime);
+        }
+        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
+        
+        if (Vector2.Distance(players[0].transform.position, players[1].transform.position)>ropeLength)
+        {
+            if (players[0].GetComponent<PlayerControl>().isGrounded() && players[1].GetComponent<PlayerControl>().isGrounded())
+            {
+                ropeLength = Vector2.Distance(players[0].transform.position, players[1].transform.position) + 1;
+            }
+        }
     }
 
     public void pause()
@@ -51,7 +72,7 @@ public class Director : MonoBehaviour
     public void shortenRope()
     {
         ropeLength += ropeSlide * Time.deltaTime;
-        ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
+        //ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
     }
 
     public void coinCollect(Vector3 spot)
@@ -74,12 +95,13 @@ public class Director : MonoBehaviour
 
     void victory()
     {
+        FindObjectOfType<Canvas>().transform.Find("Victory").gameObject.SetActive(true);
         Time.timeScale = 0;
     }
 
     public void lengthenRope()
     {
         ropeLength -= ropeSlide * Time.deltaTime;
-        ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
+        //ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
     }
 }
