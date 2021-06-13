@@ -5340,6 +5340,7 @@ MonoBehaviour:
   numberOfSegments: 30
   scaleFactor: 0.02
   mass: 2
+  totalRopeLength: 0
 --- !u!4 &969412317
 Transform:
   m_ObjectHideFlags: 0
