@@ -81,6 +81,9 @@ public class RopeRenderer : MonoBehaviour
 
         RopeSegment firstSegment = this.ropeSegments[0];
         firstSegment.nowPos = ropeStart.transform.position;
+        Vector3 extents = firstSegment.ropeObject.GetComponent<SpriteRenderer>().bounds.extents;
+        firstSegment.nowPos.x += extents.x;
+        firstSegment.nowPos.y -= extents.y;
         this.ropeSegments[0] = firstSegment;
 
         RopeSegment lastSegment = this.ropeSegments[numberOfSegments - 1];
