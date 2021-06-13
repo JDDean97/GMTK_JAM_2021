@@ -63,7 +63,6 @@ public class PlayerControl : MonoBehaviour {
 			}
 			else if (Input.GetKey(keys["down"]) && !Input.GetKey(keys["up"]))
 			{
-				float ropeSlide = 3;
 				//movementDirection[1] = -1f;
 				if(playerNum == 1)
                 {
