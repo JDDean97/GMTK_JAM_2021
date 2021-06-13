@@ -108,15 +108,15 @@ public class PlayerControl : MonoBehaviour {
 		int hits = 0;
 		for(int iter = 0;iter<3;iter++)
         {
-			RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3.left * 0.8f) + (Vector3.right * 0.4f * iter), -Vector2.up, GetComponent<Collider2D>().bounds.extents.y * 1.4f);
+			RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3.left * 0.4f) + (Vector3.right * 0.4f * iter), -Vector2.up, GetComponent<Collider2D>().bounds.extents.y * 1.4f);
 			if (hit.transform != null)
 			{
-				Debug.DrawRay(transform.position + (Vector3.left * 0.8f) + (Vector3.right * 0.4f * iter), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f),Color.red);
+				Debug.DrawRay(transform.position + (Vector3.left * 0.4f) + (Vector3.right * 0.4f * iter), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f),Color.red);
 				hits++;
 			}
 			else
 			{
-				Debug.DrawRay(transform.position + (Vector3.left * 0.8f) + (Vector3.right * 0.4f * iter), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f), Color.blue);
+				Debug.DrawRay(transform.position + (Vector3.left * 0.4f) + (Vector3.right * 0.4f * iter), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f), Color.blue);
 			}
 		}		
 		Debug.DrawRay(transform.position + (Vector3.left * 0.4f), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f));
@@ -208,6 +208,10 @@ public class PlayerControl : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+		if(collision.CompareTag("Killbox"))
+        {
+			FindObjectOfType<SceneChanger>().load(1);
+        }
 		if (collision.CompareTag("Coin"))
         {
 			FindObjectOfType<Director>().coinCollect(collision.transform.position);
