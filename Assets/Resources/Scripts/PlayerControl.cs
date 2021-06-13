@@ -25,6 +25,7 @@ public class PlayerControl : MonoBehaviour {
 	void Start () {
 		rb = GetComponent<Rigidbody2D>();
 		playerMovement = GetComponent<Movement>();
+		playerTransform = GetComponent<Transform>();
 		canMove = true;
 		speed = 5;
 		if(playerNum == 1)
@@ -79,10 +80,12 @@ public class PlayerControl : MonoBehaviour {
 			}
 			if (Input.GetKey(keys["right"]) && !Input.GetKey(keys["left"]))
 			{
+				playerTransform.localScale = new Vector3(1.0f, 1.0f, 0.0f);
 				movementDirection[0] = 1f;
 			}
 			else if (Input.GetKey(keys["left"]) && !Input.GetKey(keys["right"]))
 			{
+				playerTransform.localScale = new Vector3(-1.0f, 1.0f, 0.0f);
 				movementDirection[0] = -1f;
 			}
 		}
@@ -104,7 +107,7 @@ public class PlayerControl : MonoBehaviour {
 	}
 
     public bool isGrounded()
-    {	
+    {
 		int hits = 0;
 		for(int iter = 0;iter<3;iter++)
         {
@@ -118,7 +121,7 @@ public class PlayerControl : MonoBehaviour {
 			{
 				Debug.DrawRay(transform.position + (Vector3.left * 0.4f) + (Vector3.right * 0.4f * iter), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f), Color.blue);
 			}
-		}		
+		}
 		Debug.DrawRay(transform.position + (Vector3.left * 0.4f), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f));
 		if(hits>=2)
         {
