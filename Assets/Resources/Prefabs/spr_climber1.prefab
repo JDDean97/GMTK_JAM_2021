@@ -4982,6 +4982,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f1b11b4338fe455fb3b828710cdf015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buddy: {fileID: 0}
   playerNum: 1
   arrowCount: 0
   speed: 20

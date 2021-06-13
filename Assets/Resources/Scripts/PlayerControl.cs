@@ -104,7 +104,7 @@ public class PlayerControl : MonoBehaviour {
 		swing();
 	}
 
-    bool isGrounded()
+    public bool isGrounded()
     {
 		RaycastHit2D hit = Physics2D.Raycast(transform.position, -Vector2.up,GetComponent<Collider2D>().bounds.extents.y*1.1f);
 		Debug.DrawRay(transform.position, -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.1f));

@@ -145,6 +145,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f1b11b4338fe455fb3b828710cdf015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  buddy: {fileID: 0}
   playerNum: 2
   arrowCount: 0
   speed: 0
@@ -162,8 +163,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50e75282a6b4a4eeaa0005d35ebd280a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  xStart: 0
-  yStart: 0
 --- !u!82 &934239614
 AudioSource:
   m_ObjectHideFlags: 0

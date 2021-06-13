@@ -46,7 +46,7 @@ public class Movement : MonoBehaviour {
 		objectVelocity.y = vert;
 		//Debug.Log(objectVelocity);		
 		Vector2 constrainedVelocity = rb.GetComponent<PlayerControl>().swing();
-		if(constrainedVelocity!=Vector2.zero)
+		if(constrainedVelocity!=Vector2.zero && !GetComponent<PlayerControl>().isGrounded())
         {
 			rb.velocity = constrainedVelocity;
 		}
