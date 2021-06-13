@@ -20,9 +20,11 @@ public class PlayerControl : MonoBehaviour {
 	public bool canMove;
 	public bool climbing;
 	Dictionary<string, KeyCode> keys;
+	Animator anim;
 
 	// Use this for initialization
 	void Start () {
+		anim = GetComponent<Animator>();
 		rb = GetComponent<Rigidbody2D>();
 		playerMovement = GetComponent<Movement>();
 		playerTransform = GetComponent<Transform>();
@@ -89,7 +91,15 @@ public class PlayerControl : MonoBehaviour {
 				movementDirection[0] = -1f;
 			}
 		}
-
+		anim.SetBool("notGrounded", !isGrounded());
+		if(isGrounded()&&rb.velocity!=Vector2.zero)
+        {
+			anim.SetBool("walking", true);
+        }
+        else
+        {
+			anim.SetBool("walking", false);
+		}
 
 	}
 
@@ -113,7 +123,7 @@ public class PlayerControl : MonoBehaviour {
         {
 			RaycastHit2D hit = Physics2D.Raycast(transform.position + (Vector3.left * 0.4f) + (Vector3.right * 0.4f * iter), -Vector2.up, GetComponent<Collider2D>().bounds.extents.y * 1.4f);
 			if (hit.transform != null)
-			{
+			{				
 				Debug.DrawRay(transform.position + (Vector3.left * 0.4f) + (Vector3.right * 0.4f * iter), -Vector3.up * (GetComponent<Collider2D>().bounds.extents.y * 1.4f),Color.red);
 				hits++;
 			}
