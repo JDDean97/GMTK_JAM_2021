@@ -27,6 +27,6 @@ public class Director : MonoBehaviour
     public void lengthenRope()
     {
         ropeLength -= ropeSlide * Time.deltaTime;
-        ropeLength = Mathf.Clamp(ropeLength, 0, 25);
+        ropeLength = Mathf.Clamp(ropeLength, 0.1f, 25);
     }
 }
