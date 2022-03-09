@@ -6,8 +6,10 @@ public class Parallax : MonoBehaviour
 {
     Camera cam;
     Vector3 dir;
-    float speed = 0.2f;
+    float speed = 0.9f;
     Vector3 camPos;
+    public enum focus { behind, front };
+    public focus _focus = focus.behind;
     // Start is called before the first frame update
     void Start()
     {
@@ -19,9 +21,19 @@ public class Parallax : MonoBehaviour
     void FixedUpdate()
     {
         dir = cam.transform.position - camPos;
-        dir = cam.transform.position - transform.position;
         dir.z = 0;
-        transform.position += dir.normalized * 0.2f * speed;
+        if (_focus == focus.behind)
+        {
+
+            speed = 0.9f;
+            
+        }
+        else
+        {
+            speed = 1.4f;
+            dir = -dir;
+        }
+        transform.position += dir * speed;
         camPos = cam.transform.position;
     }
 }

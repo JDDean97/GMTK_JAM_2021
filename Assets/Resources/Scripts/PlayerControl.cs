@@ -21,9 +21,12 @@ public class PlayerControl : MonoBehaviour {
 	public bool climbing;
 	Dictionary<string, KeyCode> keys;
 	Animator anim;
+	const float Stamina = 5f;
+	float _stamina = Stamina;
 
 	// Use this for initialization
-	void Start () {
+	void Start () 
+	{
 		anim = GetComponent<Animator>();
 		rb = GetComponent<Rigidbody2D>();
 		playerMovement = GetComponent<Movement>();
@@ -43,8 +46,11 @@ public class PlayerControl : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//Debug.Log("Climb:" + climbing);
+		if (!climbing)
+		{ _stamina = Mathf.Clamp(_stamina + 0.2f * Time.deltaTime, -2f, Stamina); }
+		Debug.Log("Player "+playerNum + " Stamina: "+_stamina);
 		length = FindObjectOfType<Director>().ropeLength;
-		tether = buddy.position;
+        tether = buddy.position;
 		movementDirection[1] = 0f;
 		movementDirection[0] = 0f;
 		if (canMove)
@@ -146,41 +152,27 @@ public class PlayerControl : MonoBehaviour {
     }
 
 	public Vector3 swing()
-    {
+	{ //TODO: FIX BOUNCINESS  has something to do with delta time i think idk    used to use vel = (rb.velocity + (Vector2)(testPos - transform.position)) / time.deltatime
+		const float speedCap = 5;
 		Vector3 testPos = transform.position + (Vector3)rb.velocity * Time.deltaTime;
 		if ((testPos - tether).magnitude > length)
 		{
-			testPos = (testPos - tether).normalized * length + tether;
-			Debug.DrawRay(transform.position, testPos, Color.green, 2);
-			return (testPos - transform.position) / Time.deltaTime;
+			testPos = tether + (testPos - tether).normalized * length;
+			Vector3 vel;
+			vel = (rb.velocity + (Vector2)(testPos - transform.position));
+			Debug.DrawRay(transform.position,vel, Color.green, 2);
+			return vel;
 		}
 		else
 		{
-			Debug.DrawRay(transform.position, rb.velocity, Color.red);
+			Debug.DrawRay(transform.position, rb.velocity * 5, Color.red);
 			Vector3 vel = rb.velocity;
 			return vel;
 			//return Vector3.zero;
 		}
 	}
 
-	IEnumerator shootArrow() {
-		player = GameObject.Find("player_character");
-		playerTransform = player.GetComponent(typeof(Transform)) as Transform;
-		// Debug.Log(playerTransform.position);
-		GameObject shot = (GameObject) Instantiate(Resources.Load("Shot"),
-																							 new Vector3(playerTransform.position[0] + .5f,
-																													 playerTransform.position[1] + 1,
-																													 0),
-																							 Quaternion.identity);
-		Rigidbody2D shotRb = shot.GetComponent(typeof(Rigidbody2D)) as Rigidbody2D;
-		shotRb.velocity = new Vector2(2, .1f) * power;
-		power = 0.0f;
-		arrowCount -= 1;
-		canFire = false;
-		yield return new WaitForSeconds(.5f);
-		canFire = true;
-	}
-
+	
     private void OnCollisionStay2D(Collision2D collision)
     {
 		Vector2 realPos = (Vector2)transform.position + GetComponent<Collider2D>().offset;
@@ -201,10 +193,11 @@ public class PlayerControl : MonoBehaviour {
                 }
 				Debug.DrawRay(transform.position, contactDir * 10, Color.cyan);
 				float angle = Mathf.Abs(Vector2.SignedAngle(contactDir, dir));
-				if (angle < 95)
+				if (angle < 70 && _stamina>0)
 				{
 					Debug.Log("player" + playerNum + "  climbing");
 					climbing = true;
+					_stamina -= 1 * Time.deltaTime;
 				}
 				else
 				{

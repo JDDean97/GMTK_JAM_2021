@@ -11,7 +11,7 @@ public class Director : MonoBehaviour
     GameObject pauseMenu;
     float ropeMin = 0.1f;
     float ropeMax = 25;
-    float transitionSpeed = 3;
+    float transitionSpeed = 35;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,14 +38,15 @@ public class Director : MonoBehaviour
             
         }
 
-        if(ropeLength>ropeMax)
-        {
-            Mathf.Lerp(ropeLength, ropeMax, transitionSpeed * Time.deltaTime);
-        }
-        else if(ropeLength < ropeMin)
-        {
-            Mathf.Lerp(ropeLength, ropeMin, transitionSpeed * Time.deltaTime);
-        }
+        //if(ropeLength>ropeMax)
+        //{
+        //    Mathf.Lerp(ropeLength, ropeMax, transitionSpeed * Time.deltaTime);
+        //}
+        //else if(ropeLength < ropeMin)
+        //{
+        //    Mathf.Lerp(ropeLength, ropeMin, transitionSpeed * Time.deltaTime);
+        //}
+        
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         
         if (Vector2.Distance(players[0].transform.position, players[1].transform.position)>ropeLength)
