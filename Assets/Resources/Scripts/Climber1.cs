@@ -6,11 +6,6 @@ public class Climber1 : MonoBehaviour
 {
     private Movement playerMovement;
     private float?[] movementDirection = new float?[2];
-    private GameObject player;
-    private Transform playerTransform;
-    private float power = 0.0f;
-    public int arrowCount = 0;
-    private bool canFire = true;
     public int speed;
     private int runSpeed;
     public bool canMove;

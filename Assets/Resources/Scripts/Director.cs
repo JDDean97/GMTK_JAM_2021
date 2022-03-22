@@ -12,9 +12,11 @@ public class Director : MonoBehaviour
     float ropeMin = 0.1f;
     float ropeMax = 25;
     float transitionSpeed = 35;
+    public List<GameObject> masterTetherPoints;
     // Start is called before the first frame update
     void Start()
     {
+        masterTetherPoints = new List<GameObject>();
         Application.targetFrameRate = 60;
         Time.timeScale = 0;
         flags = GameObject.FindGameObjectsWithTag("Flag").Length;
@@ -24,6 +26,7 @@ public class Director : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        cleanTethers();
         //Debug.Log("length: " + ropeLength);
         if(Input.GetKeyDown(KeyCode.Escape))
         {
@@ -91,6 +94,18 @@ public class Director : MonoBehaviour
         if(flags<=0)
         {
             victory();
+        }
+    }
+
+    void cleanTethers()
+    {
+        PlayerControl[] pcs = FindObjectsOfType<PlayerControl>();
+        foreach(PlayerControl p in pcs)
+        {
+            if (masterTetherPoints.Contains(p.gameObject))
+            {
+                masterTetherPoints.Remove(p.gameObject);
+            }
         }
     }
 

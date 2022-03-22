@@ -85,6 +85,8 @@ public class RopeRenderer : MonoBehaviour
 
       lineRenderer.positionCount = ropePositions.Length;
       lineRenderer.SetPositions(ropePositions);
+
+      //lineRenderer.material.SetTextureScale("_MainTeX", new Vector2(lineRenderer.positionCount, lineRenderer.positionCount));
     }
 
     void Constrain()

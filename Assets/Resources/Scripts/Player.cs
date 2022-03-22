@@ -189,22 +189,7 @@ public class Player : MonoBehaviour
         float horz = Input.GetAxis("Horizontal");
         float fwd = Input.GetAxis("Vertical");
         float vert = rb.velocity.y;
-        if (grounded())
-        {
-            ////anim.ResetTrigger("land");
-            ////anim.ResetTrigger("fall");
-            //if (vert < -0.5f)
-            //{
-            //    //anim.SetTrigger("land");
-            //}
-            //vert = 0;
-            //if (Input.GetKeyUp(KeyCode.Space))
-            //{
-            //    vert = jumpForce;
-            //    //anim.SetTrigger("jump");
-            //}
-        }
-        else
+        if(!grounded())
         {
             //anim.SetTrigger("fall");
             if (vert < 0)
@@ -222,59 +207,6 @@ public class Player : MonoBehaviour
         vec = transform.rotation * vec;
         rb.velocity = vec;
     }
-
-    // void shootHook()
-    // {
-    //     LayerMask lm = LayerMask.GetMask("Default");
-    //     RaycastHit hit;
-    //     List<RaycastHit> possibles = new List<RaycastHit>();
-    //     float searchWidth = 0.2f;
-    //     float searchHeight = 0.2f;
-    //     for (float y = -searchHeight; y < searchHeight; y += 0.05f)
-    //     {
-    //         for (float x = -searchWidth; x < searchWidth; x += 0.05f)
-    //         {
-    //             Ray r = Camera.main.ViewportPointToRay(new Vector3(0.5f + x, 0.5f + y, 0));
-    //             if (Physics.Raycast(r, out hit, 50,lm))
-    //             {
-    //                 possibles.Add(hit);
-    //                 Debug.DrawRay(r.origin, r.direction * 50, Color.green,2);
-    //                 Debug.Log("Hit: " + hit.transform.name);
-    //                 //tether = hit.point;
-    //                 //length = Vector3.Distance(tether, transform.position);
-    //                 //tethered = true;
-    //                 //rope.enabled = true;
-    //             }
-    //             else
-    //             {
-    //                 Debug.DrawRay(r.origin, r.direction * 50, Color.red,2);
-    //             }
-    //         }
-    //     }
-    //     if (possibles.Count > 0)
-    //     {
-    //         Vector3 center = new Vector3(Screen.width / 2, Screen.height / 2, 0);
-    //         float bestDist = Vector3.Distance(Camera.main.WorldToScreenPoint(possibles[0].point), center);
-    //         tether = possibles[0].point;
-    //         foreach (RaycastHit h in possibles)
-    //         {
-    //             float newDist = Vector3.Distance(Camera.main.WorldToScreenPoint(h.point), center);
-    //             if (newDist < bestDist)
-    //             {
-    //                 bestDist = newDist;
-    //                 tether = h.point;
-    //             }
-    //         }
-    //         length = Vector3.Distance(tether, transform.position);
-    //         tethered = true;
-    //         rope.enabled = true;
-    //     }
-    //     else
-    //     {
-    //         tethered = false;
-    //         rope.enabled = false;
-    //     }
-    // }
 
     bool grounded()
     {
@@ -301,61 +233,5 @@ public class Player : MonoBehaviour
         }
     }
     #endregion
-
-    // void animate()
-    // {
-    //     Vector3 vel = rb.velocity;
-    //     vel = transform.InverseTransformDirection(vel);
-    //     vel = vel.normalized;
-    //     if (Input.GetKey(KeyCode.LeftShift))
-    //     {
-    //         vel *= 2;
-    //     }
-    //     Debug.Log(vel);
-    //     anim.SetFloat("horz", vel.x);
-    //     anim.SetFloat("fwd", vel.z);
-    //     anim.SetFloat("vert", vel.y);
-    //     anim.SetBool("jump", !grounded()); //set jump bool to opposite of grounded result
-    //     anim.SetBool("swing", tethered);
-    //
-    //     if (tethered)
-    //     {
-    //         transform.Find("Character").rotation = Quaternion.LookRotation(transform.position + rb.velocity, tether - transform.position);
-    //     }
-    //     else
-    //     {
-    //         transform.Find("Character").rotation = transform.rotation;
-    //     }
-    // }
-
-    public void hurt(float dmg,RaycastHit hit)
-    {
-        health -= dmg;
-        if(health<=0)
-        {
-            die(hit);
-        }
-    }
-    void die(RaycastHit deathSpot)
-    {
-
-    }
-
-    // void shoot()
-    // {
-    //     RaycastHit hit;
-    //     Ray r = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
-    //     if(Physics.Raycast(r, out hit, 100))
-    //     {
-    //         if(hit.transform.GetComponent<Player>())
-    //         {
-    //             hit.transform.GetComponent<Player>().hurt(25, hit);
-    //         }
-    //         else if(hit.transform.GetComponent<Enemy>())
-    //         {
-    //             hit.transform.GetComponent<Enemy>().hurt(25, hit);
-    //         }
-    //     }
-    // }
 
 }
